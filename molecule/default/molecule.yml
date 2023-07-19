@@ -7,14 +7,26 @@ platforms:
   - name: instance
     image: geerlingguy/docker-ubi8-ansible
     command: ${MOLECULE_DOCKER_COMMAND:-""}
-    # volumes:
-    #   - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    # cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
     pre_build_image: true
 provisioner:
   name: ansible
+  # lint:
+  #   name: ansible-lint
+  # options:
+  #   diff: True
+  #   v: True
+  # playbooks:
+  #   create: ../resources/create.yml
+  #   destroy: ../resources/destroy.yml
+  #   prepare: ../resources/prepare.yml
 verifier:
   name: testinfra
-
+  options:
+    vvv: True
+  additional_files_or_dirs:
+    - ../resources/tests/
 
     
