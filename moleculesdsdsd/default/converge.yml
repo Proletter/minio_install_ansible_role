@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: "Include configure_minio"
+      ansible.builtin.include_role:
+        name: "configure_minio"

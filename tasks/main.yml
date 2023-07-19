@@ -1,0 +1,7 @@
+---
+
+- name: install minio server
+  include_tasks: install-server.yml
+
+- name: install minio client
+  include_tasks: install-client.yml

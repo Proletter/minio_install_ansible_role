@@ -1,0 +1,28 @@
+---
+
+- name: Compose the Minio client download base url
+  set_fact:
+    _minio_client_download_path: "{{ bin_file_path }}"
+
+- name: Compose the Minio client download url with latest release
+  set_fact:
+    _minio_client_download_url: "{{ _minio_client_download_path }}/mc"
+  when: minio_client_release | length == 0
+
+- name: "Compose the Minio client download url with release {{ minio_client_release }}"
+  set_fact:
+    _minio_client_download_url: "{{ _minio_client_download_path }}/mc.{{ minio_client_release }}"
+  when: minio_client_release | length > 0
+
+- name: Copy the Minio client
+  ansible.builtin.copy:
+    src: "{{ _minio_client_download_url }}"
+    dest: "{{ minio_client_bin }}"
+    owner: "root"
+    group: "root"
+    mode: 0755
+  register: _copy_client
+  until: _copy_client is succeeded
+  retries: 5
+  delay: 2
+
