@@ -72,6 +72,16 @@
     access_key: "{{ minio_access_key }}"
 
 # s3url and port
+- name: Get remote host current IP address
+  command: curl -s ifconfig.me
+  register: ip_address_output
+  changed_when: false
+
+- name: Create file with IP address and port
+  copy:
+    content: "{{ ip_address_output.stdout }}{{ minio_server_addr }}"
+    dest: /usr/local/bin/s3url.txt
+  become: true
 
 - name: Create the Minio server systemd config
   ansible.builtin.template:
@@ -99,8 +109,25 @@
     name: minio
     state: started
     enabled: true
-  # register: service_result
-  # retries: 5
-  # delay: 5
-  # # until: service_result.status == 'running'
+
+- name: Install firewalld package
+  dnf:
+    name: firewalld
+    state: present
+  ignore_errors: true
+
+- name: Install python-firewall package
+  dnf:
+    name: python3-firewall
+    state: present
+
+- name: Open ports
+  ansible.posix.firewalld:
+    state: enabled
+    port: "{{ minio_console_port | regex_replace(':', '') }}/tcp"
+    immediate: yes
+    permanent: yes
+  ignore_errors: true
+
+
 
