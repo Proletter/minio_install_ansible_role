@@ -129,5 +129,13 @@
     permanent: yes
   ignore_errors: true
 
+- name: Open ports
+  ansible.posix.firewalld:
+    state: enabled
+    port: "{{ minio_server_addr | regex_replace(':', '') }}/tcp"
+    immediate: yes
+    permanent: yes
+  ignore_errors: true
+
 
 
