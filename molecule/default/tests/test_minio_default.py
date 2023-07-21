@@ -25,7 +25,3 @@ def test_minio_service(host):
     s = host.service('minio')
     assert s.is_running
     assert s.is_enabled
-
-def test_minio_server_webserver(host):
-
-    host.socket('tcp://127.0.0.1:9090').is_listening

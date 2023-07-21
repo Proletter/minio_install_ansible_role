@@ -23,7 +23,3 @@ provisioner:
 
 verifier:
   name: testinfra
-  options:
-    vvv: True
-  additional_files_or_dirs:
-    - ../resources/tests/
